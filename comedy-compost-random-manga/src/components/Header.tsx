@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-export default async function Header() {
+export default function Header() {
   return (
     <header className="bg-white shadow-md w-full">
       <div className="w-full px-8 py-4 flex items-center justify-between">
