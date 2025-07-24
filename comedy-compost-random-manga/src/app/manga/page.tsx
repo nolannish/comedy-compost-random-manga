@@ -5,6 +5,7 @@ import Header from '@/components/Header';
 
 export default function MangaPage() {
   const [manga, setManga] = useState<any>(null);
+  const [isMangaFetched, setIsMangaFetched] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -20,6 +21,7 @@ export default function MangaPage() {
 
       const data = await response.json();
 
+      setIsMangaFetched(true);
       setManga(data.data);
     } catch (error) {
       if (error instanceof Error) {
@@ -32,10 +34,7 @@ export default function MangaPage() {
     }
   };
 
-  useEffect(() => {
-    fetchManga();
-  }, [])
-
+ 
   return (
     <main className="min-h-screen flex flex-col items-center bg-gray-50 text-gray-800">
       <Header />
@@ -58,12 +57,30 @@ export default function MangaPage() {
         </div>
       )}
 
-      <button
+      {manga && (
+        <button
+          onClick={fetchManga}
+          className="mt-6 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+        >
+          Fetch Another
+        </button>
+      )}
+
+      {!isMangaFetched && (
+        <button
+          onClick={fetchManga}
+          className="mt-6 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+        >
+          Fetch Manga
+        </button>
+      )}
+
+      {/* <button
         onClick={fetchManga}
         className="mt-6 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
       >
         Fetch Another
-      </button>
+      </button> */}
     </main>
   );
 }
