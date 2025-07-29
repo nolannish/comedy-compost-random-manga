@@ -75,7 +75,7 @@ export default function MangaPage() {
       <Header />
       <GenreDropdown onChange={handleSelectionChange}/>
        <h1 className="text-3xl font-bold mb-4">Random Manga Finder</h1>
-      
+      <h2>Please note that due to rate limits on the api to get all these manga, some searches may take a significant amount of time</h2>
       {loading && <p>Loading...</p>}
       {error && <p className="text-red-500">{error}</p>}
       
