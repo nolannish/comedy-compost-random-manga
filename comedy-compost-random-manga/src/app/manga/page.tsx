@@ -16,6 +16,7 @@ export default function MangaPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [selections, setSelections] = useState<number[]>([]);
+  const [mangaResults, setMangaResults] = useState<any[]>([]);
 
   const fetchManga = async () => {
     setLoading(true);
@@ -60,6 +61,9 @@ export default function MangaPage() {
       
       const data = await response.json();
       console.log('genre data: ', data);
+
+      setMangaResults(data)
+      console.log('manga results: ', mangaResults)
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
