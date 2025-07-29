@@ -10,6 +10,7 @@ export default function MangaPage() {
   const [isMangaFetched, setIsMangaFetched] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [selections, setSelections] = useState<number[]>([]);
 
   const fetchManga = async () => {
     setLoading(true);
@@ -26,6 +27,7 @@ export default function MangaPage() {
       console.log(array);
       setIsMangaFetched(true);
       setManga(data.data);
+      fetchMangaWithGenres();
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
@@ -37,11 +39,36 @@ export default function MangaPage() {
     }
   };
 
+  const handleSelectionChange = (genres: number[]) => {
+    setSelections(genres);
+    console.log('selected genres: ', genres);
+  }
+
+  const fetchMangaWithGenres = async () => {
+    const genreString = selections.join(',');
+    try{
+      const response = await fetch(`https://api.jikan.moe/v4/manga?genres=${genreString}`)
+
+      if (!response.ok) {
+        throw new Error('failed to fetch manga with selected genres');
+      }
+      
+      const data = await response.json();
+      console.log('genre data: ', data);
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unexpected error occurred');
+      }
+    }
+  }
+
  
   return (
     <main className="min-h-screen flex flex-col items-center bg-gray-50 text-gray-800">
       <Header />
-      <GenreDropdown />
+      <GenreDropdown onChange={handleSelectionChange}/>
        <h1 className="text-3xl font-bold mb-4">Random Manga Finder</h1>
       
       {loading && <p>Loading...</p>}

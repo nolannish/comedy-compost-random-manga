@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import Select from 'react-select';
+import Select, { MultiValue, ActionMeta } from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { GetGenreOptions } from '@/app/data/genre-options';
 
@@ -10,10 +10,15 @@ type SelectOption = {
   label: string;
 }
 
+type GenreDropdownProps = {
+  onChange: (selected: number[]) => void;
+}
+
 const animatedComponents = makeAnimated();
 
-export default function GenreDropdown() {
+export default function GenreDropdown({ onChange }: GenreDropdownProps) {
   const [options, setOptions] = useState<SelectOption[]>([]);
+  const [selections, setSelections] = useState<number[]>([]);
 
   useEffect(() => {
     async function getOptions() {
@@ -30,6 +35,14 @@ export default function GenreDropdown() {
     getOptions();
   }, []);
 
+  const handleChange = (selectedOptions: MultiValue<SelectOption>, actionMeta: ActionMeta<SelectOption>) => {
+    // console.log('selected options: ', selectedOptions.map(options => options.value));
+    // setSelections(selectedOptions.map(options => options.value));
+    const values = selectedOptions.map(options => options.value);
+    onChange(values);
+    
+  }
+
   return (
     <Select 
       closeMenuOnSelect={false}
@@ -37,6 +50,7 @@ export default function GenreDropdown() {
       isMulti
       options={options}
       placeholder="Select Genres"
+      onChange={handleChange}
       styles={{
         control: (base) => ({
           ...base,
