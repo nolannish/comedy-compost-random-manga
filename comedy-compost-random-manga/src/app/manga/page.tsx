@@ -2,8 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import Header from '@/components/Header';
-import GenreDropdown from '@/components/GenreDropdown';
+// import GenreDropdown from '@/components/GenreDropdown';
+import dynamic from 'next/dynamic';
 import { GetGenreOptions } from '../data/genre-options';
+
+const GenreDropdown = dynamic(() => import('@/components/GenreDropdown'), {
+  ssr: false,
+});
 
 export default function MangaPage() {
   const [manga, setManga] = useState<any>(null);
@@ -47,7 +52,7 @@ export default function MangaPage() {
   const fetchMangaWithGenres = async () => {
     const genreString = selections.join(',');
     try{
-      const response = await fetch(`https://api.jikan.moe/v4/manga?genres=${genreString}`)
+      const response = await fetch(`/api/jikan-filter?genre=${genreString}`);
 
       if (!response.ok) {
         throw new Error('failed to fetch manga with selected genres');
