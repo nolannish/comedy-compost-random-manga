@@ -3,7 +3,8 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(request: NextRequest) {
   // let genre = '1';
   const { searchParams } = new URL(request.url);
-  const genre = searchParams.get('genre');
+  const genre = searchParams.get('genre') || '';
+  const genreExclude = searchParams.get('genres_exclude') || '';
   const allResults = [];
   let currentPage = 1;
   let hasNextPage = true;
@@ -11,9 +12,11 @@ export async function GET(request: NextRequest) {
   try {
     // while(hasNextPage && currentPage <= maxPages) {
     while (hasNextPage) {
-      const response = await fetch(
-        `https://api.jikan.moe/v4/manga?genres=${genre}&page=${currentPage}`
-      );
+      let url = `https://api.jikan.moe/v4/manga?page=${currentPage}`;
+      if (genre) url += `&genres=${genre}`;
+      if (genreExclude) url += `&genres_exclude=${genreExclude}`;
+
+      const response = await fetch(url);
 
       // if(!response.ok) {
       //   console.error(`Failed at page ${currentPage}:`, response.status, response.statusText);

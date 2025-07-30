@@ -16,24 +16,27 @@ type GenreDropdownProps = {
 
 const animatedComponents = makeAnimated();
 
-export default function GenreDropdown({ onChange }: GenreDropdownProps) {
-  const [options, setOptions] = useState<SelectOption[]>([]);
+export default function GenreDropdown({ onChange, options }: {
+  onChange: (genres: number[]) => void;
+  options: SelectOption[];
+}) {
+  // const [options, setOptions] = useState<SelectOption[]>([]);
   const [selections, setSelections] = useState<number[]>([]);
 
-  useEffect(() => {
-    async function getOptions() {
-      const genres = await GetGenreOptions();
+  // useEffect(() => {
+  //   async function getOptions() {
+  //     const genres = await GetGenreOptions();
 
-      const selectOptions = genres.map((genre) => ({
-        value: genre.mal_id,
-        label: genre.name
-      }));
+  //     const selectOptions = genres.map((genre) => ({
+  //       value: genre.mal_id,
+  //       label: genre.name
+  //     }));
 
-      setOptions(selectOptions);
-    }
+  //     setOptions(selectOptions);
+  //   }
 
-    getOptions();
-  }, []);
+  //   getOptions();
+  // }, []);
 
   const handleChange = (selectedOptions: MultiValue<SelectOption>, actionMeta: ActionMeta<SelectOption>) => {
     // console.log('selected options: ', selectedOptions.map(options => options.value));
