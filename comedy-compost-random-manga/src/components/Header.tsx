@@ -11,6 +11,9 @@ export default function Header() {
           <Link href="/manga" className="text-gray-600 hover:text-blue-600 font-medium">
             Get Manga
           </Link>
+          <Link href='/genre-search' className="text-gray-600 hover:text-blue-600 fond-medium">
+            Advanced Search
+          </Link>
           <Link href='/about' className="text-gray-600 hover:text-blue-600 font-medium">
             About
           </Link>

@@ -33,7 +33,7 @@ export default function MangaPage() {
       console.log(array);
       setIsMangaFetched(true);
       setManga(data.data);
-      // fetchMangaWithGenres();
+      fetchMangaWithGenres();
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
@@ -49,40 +49,37 @@ export default function MangaPage() {
     setSelections(genres);
     console.log('selected genres: ', genres);
   }
-// below code migrated to another page (genre-search/page.tsx) for simpler use, will come back to delete later
-  // const fetchMangaWithGenres = async () => {
-  //   const genreString = selections.join(',');
-  //   try{
-  //     const response = await fetch(`/api/jikan-filter?genre=${genreString}`);
 
-  //     if (!response.ok) {
-  //       throw new Error('failed to fetch manga with selected genres');
-  //     }
+  const fetchMangaWithGenres = async () => {
+    const genreString = selections.join(',');
+    try{
+      const response = await fetch(`/api/jikan-filter?genre=${genreString}`);
+
+      if (!response.ok) {
+        throw new Error('failed to fetch manga with selected genres');
+      }
       
-  //     const data = await response.json();
-  //     console.log('genre data: ', data);
+      const data = await response.json();
+      console.log('genre data: ', data);
 
-  //     setMangaResults(data)
-  //     console.log('manga results: ', mangaResults)
-  //   } catch (error) {
-  //     if (error instanceof Error) {
-  //       setError(error.message);
-  //     } else {
-  //       setError('An unexpected error occurred');
-  //     }
-  //   }
-  // }
+      setMangaResults(data)
+      console.log('manga results: ', mangaResults)
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unexpected error occurred');
+      }
+    }
+  }
 
  
   return (
     <main className="min-h-screen flex flex-col items-center bg-gray-50 text-gray-800">
       <Header />
-      {/* <GenreDropdown onChange={handleSelectionChange}/> */}
+      <GenreDropdown onChange={handleSelectionChange}/>
        <h1 className="text-3xl font-bold mb-4">Random Manga Finder</h1>
-      <h2>DISCLAIMER: Viewed discrestion is advised</h2>
-      <h2>This pulls information from MyAnimeList, a website that hosts information about all different kinds of content, including content that is not suitable for all audiences</h2>
-      <h2>As a result, please use this tool at your own discretion</h2>
-      <h2>If you would like a search that is a little bit safer, please head to the advanced search section</h2>
+      <h2>Please note that due to rate limits on the api to get all these manga, some searches may take a significant amount of time</h2>
       {loading && <p>Loading...</p>}
       {error && <p className="text-red-500">{error}</p>}
       

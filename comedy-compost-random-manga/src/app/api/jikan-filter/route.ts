@@ -23,8 +23,9 @@ export async function GET(request: NextRequest) {
       if (response.status === 429) {
         const retryAfter = response.headers.get('Retry-After');
         const waitTime = retryAfter ? parseInt(retryAfter) * 1000 : 3000;
-
+        const body = await response.text();
         console.warn(`Rate limited on page ${currentPage}, retrying in ${waitTime}ms...`);
+        console.warn(`Response body: ${body}`);
         await new Promise((resolve) => setTimeout(resolve, waitTime));
         continue;
       }
