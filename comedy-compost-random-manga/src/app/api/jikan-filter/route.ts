@@ -1,10 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+const cache = new Map<string, { data: any; expiry: number }>();
+
+const CACHE_DURATION = 1000 * 60 * 10; //10 minutes (will probably update to be longer in future)
+
 export async function GET(request: NextRequest) {
   // let genre = '1';
   const { searchParams } = new URL(request.url);
   const genre = searchParams.get('genre') || '';
   const genreExclude = searchParams.get('genres_exclude') || '';
+  const cacheKey = `jikan-filter-${genre}-${genreExclude}`;
+
+  const now = Date.now();
+
+  const cached = cache.get(cacheKey);
+
+  if (cached && cached.expiry > now) {
+    console.log('Returning cached data for:', cacheKey);
+    return NextResponse.json(cached);
+  }
+
+  console.log(`No cached data found for: ${cacheKey}, fetching new data...`);
   const allResults = [];
   let currentPage = 1;
   let hasNextPage = true;
@@ -32,8 +48,20 @@ export async function GET(request: NextRequest) {
         await new Promise((resolve) => setTimeout(resolve, waitTime));
         continue;
       }
+
+      if (!response.ok) {
+        return NextResponse.json(
+          { error: `failed to fetch page: ${currentPage}` },
+          { status: response.status }
+        )
+      }
       const data = await response.json();
 
+      if (!data || !data.data || !data.pagination) {
+        console.warn(`Incomplete data received on page ${currentPage}:`, data);
+        break
+      }
+      
       allResults.push(...data.data);
 
       hasNextPage = data.pagination?.has_next_page;
@@ -41,6 +69,11 @@ export async function GET(request: NextRequest) {
 
       await new Promise((resolve) => setTimeout(resolve, 500));
     }
+
+    cache.set(cacheKey, {
+      data: allResults,
+      expiry: now + CACHE_DURATION,
+    });
     // console.log(data);
 
     // return NextResponse.json(data);
