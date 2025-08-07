@@ -94,7 +94,7 @@ export default function MangaPage() {
       <h2>Exclude Genres</h2>
       <GenreDropdown onChange={handleSelectionChangeExclude} options={options}/>
        <h1 className="text-3xl font-bold mb-4">Random Manga Finder</h1>
-      <h2>Please note that due to rate limits on the api to get all these manga, some searches may take a significant amount of time</h2>
+      <p className="text-gray-600 mb-4">Select genres to include or exclude, then click "Fetch Manga".</p>
       {loading && <p>Loading...</p>}
       {error && <p className="text-red-500">{error}</p>}
       
@@ -134,6 +134,12 @@ export default function MangaPage() {
         </button>
       )}
 
+      <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-4 rounded max-w-xl mt-4" role="alert">
+        <strong className="font-bold">Rate Limit Warning: </strong>
+        <span className="block sm:inline ml-1">
+          Due to API rate limits, some searches may take a significant amount of time on the first attempt, due to their being thousands of results for some searches. Caching is implemented to make subsequen searches faster.
+        </span>
+      </div>
       {/* <button
         onClick={fetchMangaWithGenres}
         className="mt-6 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
