@@ -1,8 +1,12 @@
+import Header from "@/components/Header";
+
 export default function AboutPage() {
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center bg-gray-50 text-gray-800">
-      <h1 className="text-4xl font-bold mb-4">About Page</h1>
-      <p className="text-lg">This is a placeholder page to confirm routing is working.</p>
+    <main className="min-h-screen flex flex-col justify-between bg-gray-50 text-gray-800">
+      <Header />
+      <section className="flex-grow flex flex-col justify-between text-center px-3">
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">About Us</h1>  
+      </section>
     </main>
   );
 }
