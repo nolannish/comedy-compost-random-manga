@@ -79,10 +79,6 @@ export default function MangaPage() {
       <Header />
       {/* <GenreDropdown onChange={handleSelectionChange}/> */}
        <h1 className="text-3xl font-bold mb-4">Random Manga Finder</h1>
-      <h2>DISCLAIMER: Viewed discrestion is advised</h2>
-      <h2>This pulls information from MyAnimeList, a website that hosts information about all different kinds of content, including content that is not suitable for all audiences</h2>
-      <h2>As a result, please use this tool at your own discretion</h2>
-      <h2>If you would like a search that is a little bit safer, please head to the advanced search section</h2>
       {loading && <p>Loading...</p>}
       {error && <p className="text-red-500">{error}</p>}
       
@@ -122,6 +118,12 @@ export default function MangaPage() {
         </button>
       )}
 
+      <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-4 rounded max-w-xl mt-4" role="alert">
+        <strong className="font-bold">Sensitive Content Warning: </strong>
+        <span className="block sm:inline ml-1">
+          Some manga provided by this service may contain sensitive content, as it pull information from MyAnimeList.net which is known to host information about manga that may not be suitable for all audiences. Please be vigilant and double check whether the manga that you are viewing is suitable for you.
+        </span>
+      </div>
       {/* <button
         onClick={fetchManga}
         className="mt-6 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
