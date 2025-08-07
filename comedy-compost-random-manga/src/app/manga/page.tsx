@@ -15,8 +15,6 @@ export default function MangaPage() {
   const [isMangaFetched, setIsMangaFetched] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [selections, setSelections] = useState<number[]>([]);
-  const [mangaResults, setMangaResults] = useState<any[]>([]);
 
   const fetchManga = async () => {
     setLoading(true);
@@ -29,11 +27,10 @@ export default function MangaPage() {
       }
 
       const data = await response.json();
-      const array = await GetGenreOptions()
-      console.log(array);
+      // const array = await GetGenreOptions()
+      // console.log(array);
       setIsMangaFetched(true);
       setManga(data.data);
-      // fetchMangaWithGenres();
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
@@ -44,34 +41,6 @@ export default function MangaPage() {
       setLoading(false);
     }
   };
-
-  const handleSelectionChange = (genres: number[]) => {
-    setSelections(genres);
-    console.log('selected genres: ', genres);
-  }
-// below code migrated to another page (genre-search/page.tsx) for simpler use, will come back to delete later
-  // const fetchMangaWithGenres = async () => {
-  //   const genreString = selections.join(',');
-  //   try{
-  //     const response = await fetch(`/api/jikan-filter?genre=${genreString}`);
-
-  //     if (!response.ok) {
-  //       throw new Error('failed to fetch manga with selected genres');
-  //     }
-      
-  //     const data = await response.json();
-  //     console.log('genre data: ', data);
-
-  //     setMangaResults(data)
-  //     console.log('manga results: ', mangaResults)
-  //   } catch (error) {
-  //     if (error instanceof Error) {
-  //       setError(error.message);
-  //     } else {
-  //       setError('An unexpected error occurred');
-  //     }
-  //   }
-  // }
 
  
   return (
@@ -121,7 +90,7 @@ export default function MangaPage() {
       <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-4 rounded max-w-xl mt-4" role="alert">
         <strong className="font-bold">Sensitive Content Warning: </strong>
         <span className="block sm:inline ml-1">
-          Some manga provided by this service may contain sensitive content, as it pull information from MyAnimeList.net which is known to host information about manga that may not be suitable for all audiences. Please be vigilant and double check whether the manga that you are viewing is suitable for you.
+          Some manga provided by this service may contain sensitive content, as it pull information from MyAnimeList.net which is known to host information about manga that may not be suitable for all audiences. Due to this function being completley random, I have no control over filtering this information out as of yet. Please be vigilant and double check whether the manga that you are viewing is suitable for you.
         </span>
       </div>
       {/* <button
