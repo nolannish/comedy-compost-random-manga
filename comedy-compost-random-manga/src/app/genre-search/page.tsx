@@ -60,7 +60,11 @@ export default function MangaPage() {
     const genreString = selections.join(',');
     const genreExcludeString = selectionsExclude.join(',');
     try{
-      const response = await fetch(`/api/jikan-filter?genre=${genreString}&genres_exclude=${genreExcludeString}`);
+      let url = `/api/jikan-genre?`;
+      if (genreString) url += `genre=${genreString}`;
+      if (genreExcludeString) url += `&genres_exclude=${genreExcludeString}`;
+
+      const response = await fetch(url);
 
       if (!response.ok) {
         throw new Error('failed to fetch manga with selected genres');
