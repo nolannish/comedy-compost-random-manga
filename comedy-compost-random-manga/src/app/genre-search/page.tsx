@@ -73,10 +73,8 @@ export default function MangaPage() {
       const data = await response.json();
       console.log('genre data: ', data);
 
-      const randomInt = getRandomInt(0, data.data.length - 1);
-      console.log('random int: ', randomInt);
-
-      setManga(data.data[randomInt]);
+      // setManga(data.data[randomInt]);
+      setManga(data.data);
       setIsMangaFetched(true);
     } catch (error) {
       if (error instanceof Error) {
