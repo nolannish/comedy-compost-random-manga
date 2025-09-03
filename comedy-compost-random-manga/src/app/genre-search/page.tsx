@@ -137,9 +137,9 @@ export default function MangaPage() {
       )}
 
       <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-4 rounded max-w-xl mt-4" role="alert">
-        <strong className="font-bold">Rate Limit Warning: </strong>
+        <strong className="font-bold">Adult Content Warning: </strong>
         <span className="block sm:inline ml-1">
-          Due to API rate limits, some searches may take a significant amount of time on the first attempt, due to their being thousands of results for some searches. Caching is implemented to make subsequen searches faster.
+          Please be aware that some manga retrieved may contain adult content. Strong user discretion is advised.
         </span>
       </div>
       {/* <button
