@@ -5,23 +5,27 @@ import Header from '@/components/Header';
 // import GenreDropdown from '@/components/GenreDropdown';
 import dynamic from 'next/dynamic';
 import { GetGenreOptions } from '../data/genre-options';
+import Image from 'next/image';
+import type { Manga } from '@/types/index';
 
 const GenreDropdown = dynamic(() => import('@/components/GenreDropdown'), {
   ssr: false,
 });
 
-function getRandomInt(min: number, max: number): number {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+// unneeded function, kept for reference just incases
+// function getRandomInt(min: number, max: number): number {
+//   min = Math.ceil(min);
+//   max = Math.floor(max);
+//   return Math.floor(Math.random() * (max - min + 1)) + min;
+// }
+
 type SelectOption ={
   value: number;
   label: string;
 }
 
 export default function MangaPage() {
-  const [manga, setManga] = useState<any>(null);
+  const [manga, setManga] = useState<Manga | null>(null);
   const [isMangaFetched, setIsMangaFetched] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -41,14 +45,18 @@ export default function MangaPage() {
 
   useEffect(() => {
     async function getOptions() {
+      setLoading(true);
+
+      //Fetch genre options from the API
       const genres = await GetGenreOptions();
 
       const selectOptions = genres.map((genre) => ({
         value: genre.mal_id,
         label: genre.name
       }));
-      console.log('select options: ', options);
+      console.log('select options: ', selectOptions);
       setOptions(selectOptions);
+      setLoading(false);
     }
     
     getOptions();
@@ -57,6 +65,7 @@ export default function MangaPage() {
 
 
   const fetchMangaWithGenres = async () => {
+    setLoading(true);
     const genreString = selections.join(',');
     const genreExcludeString = selectionsExclude.join(',');
     try{
@@ -82,6 +91,8 @@ export default function MangaPage() {
       } else {
         setError('An unexpected error occurred');
       }
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -96,7 +107,7 @@ export default function MangaPage() {
       <h2>Exclude Genres</h2>
       <GenreDropdown onChange={handleSelectionChangeExclude} options={options}/>
        <h1 className="text-3xl font-bold mb-4">Random Manga Finder</h1>
-      <p className="text-gray-600 mb-4">Select genres to include or exclude, then click "Fetch Manga".</p>
+      <p className="text-gray-600 mb-4">Select genres to include or exclude, then click &quot;Fetch Manga&quot;.</p>
       {loading && <p>Loading...</p>}
       {error && <p className="text-red-500">{error}</p>}
       
@@ -105,9 +116,11 @@ export default function MangaPage() {
           <div className="bg-white shadow-md rounded p-6 w-full max-w-md">
             <h2 className="text-2xl font-semibold mb-2">{manga.title}</h2>
             {manga.images?.jpg?.image_url && (
-              <img
+              <Image
                 src={manga.images.jpg.image_url}
                 alt={manga.title}
+                width={400}
+                height={600}
                 className="w-full h-auto rounded mb-4"
               />
             )}

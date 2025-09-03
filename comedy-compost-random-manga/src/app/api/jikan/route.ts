@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
-export async function GET(requst: NextRequest) {
+export async function GET() {
   const totalMangaResponse = await fetch(
     `https://api.jikan.moe/v4/manga?limit=1`
   )
@@ -11,7 +11,7 @@ export async function GET(requst: NextRequest) {
   let attempt = 0;
   let data = null;
   while (attempt < maxAttempts) {
-    let randomNumber: number = getRandomInt(1, totalManga.pagination.items.total);
+    const randomNumber: number = getRandomInt(1, totalManga.pagination.items.total);
     console.log('random id selected: ', randomNumber);
 
     const response = await fetch(

@@ -19,7 +19,7 @@ export default function Header() {
       <div className="w-full px-8 py-4 flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Link href='/'>
-            <h1 className="text-2xl font-bold text-gray-800">Comedy Compost's RMG</h1>
+            <h1 className="text-2xl font-bold text-gray-800">Comedy Compost&apos;s RMG</h1>
           </Link>
         </div>
         <nav className="flex flex-wrap gap-x-4 sm:gap-x-6 md:gap-x-8">

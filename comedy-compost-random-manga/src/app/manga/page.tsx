@@ -1,17 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Header from '@/components/Header';
-// import GenreDropdown from '@/components/GenreDropdown';
-import dynamic from 'next/dynamic';
-import { GetGenreOptions } from '../data/genre-options';
-
-const GenreDropdown = dynamic(() => import('@/components/GenreDropdown'), {
-  ssr: false,
-});
+import type { Manga } from '@/types/index';
+import Image from 'next/image';
 
 export default function MangaPage() {
-  const [manga, setManga] = useState<any>(null);
+  const [manga, setManga] = useState<Manga | null>(null);
   const [isMangaFetched, setIsMangaFetched] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -56,9 +51,11 @@ export default function MangaPage() {
           <div className="bg-white shadow-md rounded p-6 w-full max-w-md">
             <h2 className="text-2xl font-semibold mb-2">{manga.title}</h2>
             {manga.images?.jpg?.image_url && (
-              <img
+              <Image
                 src={manga.images.jpg.image_url}
                 alt={manga.title}
+                width={400}
+                height={600}
                 className="w-full h-auto rounded mb-4"
               />
             )}

@@ -17,7 +17,7 @@ export async function GetGenreOptions(): Promise<GenreOption[]> {
 
     const genreOptions: GenreOption[] = Array.from(
       new Map(
-        (data.data || []).map((genre: any) => [genre.mal_id, { mal_id: genre.mal_id, name: genre.name }])
+        (data.data || []).map((genre: GenreOption) => [genre.mal_id, { mal_id: genre.mal_id, name: genre.name }])
       ).values()
     ) as GenreOption[];
     console.log('filtered genres:', genreOptions);
