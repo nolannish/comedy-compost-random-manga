@@ -10,11 +10,17 @@ export async function GetGenreOptions(): Promise<GenreOption[]> {
 
     // console.log(data);
 
-    const genreOptions: GenreOption[] = (data.data || []).map((genre: any) => ({
-      mal_id: genre.mal_id,
-      name: genre.name
-    }));
+    // const genreOptions: GenreOption[] = (data.data || []).map((genre: any) => ({
+    //   mal_id: genre.mal_id,
+    //   name: genre.name
+    // }));
 
+    const genreOptions: GenreOption[] = Array.from(
+      new Map(
+        (data.data || []).map((genre: any) => [genre.mal_id, { mal_id: genre.mal_id, name: genre.name }])
+      ).values()
+    ) as GenreOption[];
+    console.log('filtered genres:', genreOptions);
     return genreOptions;
 
   } catch (error) {
