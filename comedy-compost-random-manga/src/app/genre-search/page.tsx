@@ -137,6 +137,11 @@ export default function MangaPage() {
           onClick={fetchMangaWithGenres}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.80 }}
+          transition={{
+            type: 'spring',
+            stiffness: 500,
+            damping: 20,
+          }}
           className="mt-6 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
         >
           Fetch Another
@@ -149,6 +154,11 @@ export default function MangaPage() {
           onClick={fetchMangaWithGenres}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.80 }}
+          transition={{
+            type: 'spring',
+            stiffness: 500,
+            damping: 20,
+          }}
           className="mt-6 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
         >
           Get Manga
