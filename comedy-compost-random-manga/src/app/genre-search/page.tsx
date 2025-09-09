@@ -13,13 +13,6 @@ const GenreDropdown = dynamic(() => import('@/components/GenreDropdown'), {
   ssr: false,
 });
 
-// unneeded function, kept for reference just incases
-// function getRandomInt(min: number, max: number): number {
-//   min = Math.ceil(min);
-//   max = Math.floor(max);
-//   return Math.floor(Math.random() * (max - min + 1)) + min;
-// }
-
 type SelectOption ={
   value: number;
   label: string;
