@@ -97,9 +97,9 @@ export default function MangaPage() {
     <main className="min-h-screen flex flex-col items-center bg-gray-50 text-gray-800">
       <Header />
       <h2>Include Genres</h2>
-      <GenreDropdown onChange={handleSelectionChange} options={options}/>
+      <GenreDropdown onChange={handleSelectionChange} options={options.filter(opt => !selectionsExclude.includes(opt.value))}/>
       <h2>Exclude Genres</h2>
-      <GenreDropdown onChange={handleSelectionChangeExclude} options={options}/>
+      <GenreDropdown onChange={handleSelectionChangeExclude} options={options.filter(opt => !selections.includes(opt.value))}/>
        <h1 className="text-3xl font-bold mb-4">Random Manga Finder</h1>
       <p className="text-gray-600 mb-4">Select genres to include or exclude, then click &quot;Fetch Manga&quot;.</p>
       {loading && <p>Loading...</p>}
