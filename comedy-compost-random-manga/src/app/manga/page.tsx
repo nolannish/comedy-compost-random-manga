@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Header from '@/components/Header';
 import type { Manga } from '@/types/index';
 import Image from 'next/image';
+import { motion } from 'motion/react';
 
 export default function MangaPage() {
   const [manga, setManga] = useState<Manga | null>(null);
@@ -67,21 +68,25 @@ export default function MangaPage() {
       )}
 
       {manga && (
-        <button
+        <motion.button
           onClick={fetchManga}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.80 }}
           className="mt-6 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
         >
           Fetch Another
-        </button>
+        </motion.button>
       )}
 
       {!isMangaFetched && (
-        <button
+        <motion.button
           onClick={fetchManga}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.80 }}
           className="mt-6 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
         >
-          Fetch Manga
-        </button>
+          Get Manga
+        </motion.button>
       )}
 
       <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-4 rounded max-w-xl mt-4" role="alert">
