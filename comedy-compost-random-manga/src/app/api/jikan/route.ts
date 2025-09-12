@@ -7,7 +7,7 @@ export async function GET() {
 
   const totalManga = await totalMangaResponse.json();
 
-  const maxAttempts = 5;
+  const maxAttempts = 10;
   let attempt = 0;
   let data = null;
   while (attempt < maxAttempts) {

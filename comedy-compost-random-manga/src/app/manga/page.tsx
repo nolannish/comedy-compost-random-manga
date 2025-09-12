@@ -4,7 +4,8 @@ import { useState } from 'react';
 import Header from '@/components/Header';
 import type { Manga } from '@/types/index';
 import Image from 'next/image';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
+import { PulseLoader } from 'react-spinners';
 
 export default function MangaPage() {
   const [manga, setManga] = useState<Manga | null>(null);
@@ -44,28 +45,63 @@ export default function MangaPage() {
       <Header />
       {/* <GenreDropdown onChange={handleSelectionChange}/> */}
        <h1 className="text-3xl font-bold mb-4">Random Manga Finder</h1>
-      {loading && <p>Loading...</p>}
       {error && <p className="text-red-500">{error}</p>}
       
-      {manga && (
-        <div className="flex flex-row">
-          <div className="bg-white shadow-md rounded p-6 w-full max-w-md">
-            <h2 className="text-2xl font-semibold mb-2">{manga.title}</h2>
-            {manga.images?.jpg?.image_url && (
-              <Image
-                src={manga.images.jpg.image_url}
-                alt={manga.title}
-                width={400}
-                height={600}
-                className="w-full h-auto rounded mb-4"
-              />
-            )}
-          </div>
-          <div className="bg-white shadow-md rounded p-5 w-full max-w-md">
-            <p>{manga.synopsis || 'No synopsis available.'}</p>
-          </div>
-        </div>
-      )}
+      <AnimatePresence mode="wait">
+        {loading && (
+          <motion.div
+            key="loader"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="flex flex-row"
+          >
+            <div className="flex flex-row">
+              {/* Loader Left */}
+              <div className="bg-white shadow-md rounded p-6 w-full max-w-md flex flex-col items-center justify-center">
+                <PulseLoader color="#000000" size={15} />
+              </div>
+
+              {/* Loader Right */}
+              <div className="bg-white shadow-md rounded p-5 w-full max-w-md flex items-center justify-center">
+                <p className="text-gray-500 italic">Fetching new manga...</p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence mode="wait">
+        {!loading && manga && (
+          <motion.div
+            key="manga"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="flex flex-row"
+          >
+            <div className="flex flex-row">
+              <div className="bg-white shadow-md rounded p-6 w-full max-w-md">
+                <h2 className="text-2xl font-semibold mb-2">{manga.title}</h2>
+                {manga.images?.jpg?.image_url && (
+                  <Image
+                    src={manga.images.jpg.image_url}
+                    alt={manga.title}
+                    width={400}
+                    height={600}
+                    className="w-full h-auto rounded mb-4"
+                  />
+                )}
+              </div>
+              <div className="bg-white shadow-md rounded p-5 w-full max-w-md">
+                <p>{manga.synopsis || 'No synopsis available.'}</p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {manga && (
         <motion.button
