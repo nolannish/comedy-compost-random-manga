@@ -58,12 +58,12 @@ export default function MangaPage() {
             className="flex flex-row"
           >
             <div className="flex flex-row">
-              {/* Loader Left */}
+              {/* Manga Image Loader */}
               <div className="bg-white shadow-md rounded p-6 w-full max-w-md flex flex-col items-center justify-center">
                 <PulseLoader color="#000000" size={15} />
               </div>
 
-              {/* Loader Right */}
+              {/* Manga Synopsis Loader */}
               <div className="bg-white shadow-md rounded p-5 w-full max-w-md flex items-center justify-center">
                 <p className="text-gray-500 italic">Fetching new manga...</p>
               </div>

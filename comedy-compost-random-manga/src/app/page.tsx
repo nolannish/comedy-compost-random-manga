@@ -9,7 +9,7 @@ export default function Home() {
       <Header />
 
       <section className="flex-grow flex flex-col items-center justify-center text-center px-4">
-        <h2 className="text-4xl md:text-5xl font-bold mb-4">Random Manga Generator</h2>
+        <h2 className="text-4xl md:text-5xl font-bold text-shadow-lg mb-4">Random Manga Generator</h2>
         <p className="text-lg mb-6">Welcome to our random manga generator. Initially made for a YouTube Video, free for anyone to use!</p>
         <div className="flex flex-col gap-6 md:flex-row md:gap-12 items-start">
           <div className="flex flex-col">
