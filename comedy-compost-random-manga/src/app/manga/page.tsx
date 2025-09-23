@@ -12,6 +12,7 @@ export default function MangaPage() {
   const [isMangaFetched, setIsMangaFetched] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  // const [title, setTitle] = useState('');
 
   const fetchManga = async () => {
     setLoading(true);
@@ -26,6 +27,7 @@ export default function MangaPage() {
       const data = await response.json();
       // const array = await GetGenreOptions()
       // console.log(array);
+      fetchMangadex(data.data.title);
       setIsMangaFetched(true);
       setManga(data.data);
     } catch (error) {
@@ -38,6 +40,25 @@ export default function MangaPage() {
       setLoading(false);
     }
   };
+
+  const fetchMangadex = async (title: string) => {
+    try{
+      const response = await fetch(`/api/mangadex-retrieve?title=${title}`);
+
+      if(!response.ok) {
+        throw new Error('Failed to fetch manga from Mangadex');
+      }
+
+      const data = await response.json();
+      console.log('Mangadex data: ', data);
+    } catch (error) {
+      if(error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unexpected error occurred');
+      }
+    }
+  }
 
  
   return (
