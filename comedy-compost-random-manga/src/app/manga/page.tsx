@@ -12,6 +12,7 @@ export default function MangaPage() {
   const [isMangaFetched, setIsMangaFetched] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [mangadexUrl, setMangadexUrl] = useState('');
   // const [title, setTitle] = useState('');
 
   const fetchManga = async () => {
@@ -45,12 +46,24 @@ export default function MangaPage() {
     try{
       const response = await fetch(`/api/mangadex-retrieve?title=${title}`);
 
+      // update this in the future, as cannot exactly be considered an error, just that a result was not found
+      // better way to handle this than big red error text on the screen
+      if(response.status === 404) {
+        setMangadexUrl('');
+        throw new Error('No results found on mangadex');
+      }
+
       if(!response.ok) {
         throw new Error('Failed to fetch manga from Mangadex');
       }
 
+      // if(response.status===404) {
+      //   throw new Error('No results found on mangadex')
+      // }
+
       const data = await response.json();
       console.log('Mangadex data: ', data);
+      setMangadexUrl(data.pageUrl);
     } catch (error) {
       if(error instanceof Error) {
         setError(error.message);
@@ -155,11 +168,51 @@ export default function MangaPage() {
           Get Manga
         </motion.button>
       )}
+      <div className="flex flex-col gap-6 md:flex-row md:gap-12 items-start">
+        {mangadexUrl && (
+          <div className="flex flex-col">
+            <motion.button
+              onClick={() => window.open(mangadexUrl, '_blank')}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.80 }}
+              transition={{
+                type: 'spring',
+                stiffness: 500,
+                damping: 20,
+              }}
+              className="mt-6 px-6 py-2 bg-orange-600 text-white rounded hover:bg-orange-700 transition"
+            >
+              Go to MangaDex
+            </motion.button>
 
+            {/* Disclaimer Text */}
+            {/* this needs to be reworked cause this looks super ugly */}
+            <p className="mt-2 text-sm text-gray-600 max-w-xs">
+              Note: Due to MangaDex's title seraching methods, this link may not always be accurate.
+            </p>
+          </div>
+        )}
+        <div className="flex flex-col">
+          <motion.button
+            onClick={() => window.open('https://batotwo.docs.apiary.io/#introduction/allowed-https-requests:', '_blank')}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.80 }}
+            transition={{
+              type: 'spring',
+              stiffness: 500,
+              damping: 20,
+            }}
+            className="mt-6 px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+          >
+            Go to Batoto
+          </motion.button>
+        </div>
+      </div>
       <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-4 rounded max-w-xl mt-4" role="alert">
         <strong className="font-bold">Sensitive Content Warning: </strong>
         <span className="block sm:inline ml-1">
-          Some manga provided by this service may contain sensitive content, as it pull information from MyAnimeList.net which is known to host information about manga that may not be suitable for all audiences. Due to this function being completley random, I have no control over filtering this information out as of yet. Please be vigilant and double check whether the manga that you are viewing is suitable for you.
+          There are blocks in place to filter out manga that are specifically pornographic in nature, as this is not the intended use for this webapp. However, if these filters were made too strict, it would remove the possibility of finding some great stories, such as Berserk by Kentaro Miura.
+          As a result, there is still a chance that some titles that contain pornographic material will appear and viewer discretion is advised.
         </span>
       </div>
       {/* <button

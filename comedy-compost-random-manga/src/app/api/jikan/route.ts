@@ -1,5 +1,9 @@
 import { NextResponse } from 'next/server';
 
+type Genre = {
+  mal_id: number;
+  name: string;
+}
 export async function GET() {
   const totalMangaResponse = await fetch(
     `https://api.jikan.moe/v4/manga?limit=1`
@@ -10,6 +14,10 @@ export async function GET() {
   const maxAttempts = 10;
   let attempt = 0;
   let data = null;
+  
+  // list of excluded genres as these are not suitable for a general audience
+  const excludedGenres: number[] = [9, 49, 12]
+
   while (attempt < maxAttempts) {
     const randomNumber: number = getRandomInt(1, totalManga.pagination.items.total);
     console.log('random id selected: ', randomNumber);
@@ -18,22 +26,32 @@ export async function GET() {
       `https://api.jikan.moe/v4/manga/${randomNumber}`
     )
 
-    if (response.ok) {
-      const json = await response.json();
+    if (!response.ok) {
+      attempt++;
+      continue;
+    }
 
-      if (json.data && json.data.title) {
+    const json = await response.json();
+
+    if (json.data && json.data.title) {
+      const mangaGenres = json.data.genres.map((genre: Genre) => genre.mal_id);
+
+      const hasExcludedGenres = mangaGenres.some((id: number) => excludedGenres.includes(id))
+
+      if (!hasExcludedGenres) {
         console.log('Success on attempt: ', attempt + 1);
         data = json;
         break;
+      } else {
+        console.log('Skipping manga due to genre that is innapropirate for general audiences');
+        continue;
       }
     }
-    attempt++;
   }
-    // console.log(data);
   if (!data) {
     return NextResponse.json({ error: 'Failed to fetch manga after multiple attempts' }, { status: 500 });
   }
-
+  console.log('Final data returned: ', data);
   return NextResponse.json(data);
 }
 
