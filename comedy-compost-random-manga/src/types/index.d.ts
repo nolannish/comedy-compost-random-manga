@@ -6,4 +6,5 @@ export interface Manga {
       image_url?: string;
     };
   };
+  mal_id?: number;
 }

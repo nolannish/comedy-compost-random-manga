@@ -16,6 +16,10 @@ export default function MangaPage() {
   // const [title, setTitle] = useState('');
 
   const fetchManga = async () => {
+    // clear old results
+    // setManga(null);
+    setMangadexUrl('');
+    setError('');
     setLoading(true);
     setError('');
     try{
@@ -28,9 +32,12 @@ export default function MangaPage() {
       const data = await response.json();
       // const array = await GetGenreOptions()
       // console.log(array);
-      fetchMangadex(data.data.title);
+      fetchMangadex(data.data.title, data.mal_id);
       setIsMangaFetched(true);
-      setManga(data.data);
+      setManga({
+        ...data.data,
+        mal_id: data.mal_id,
+      });
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
@@ -42,9 +49,9 @@ export default function MangaPage() {
     }
   };
 
-  const fetchMangadex = async (title: string) => {
+  const fetchMangadex = async (title: string, mal_id: number) => {
     try{
-      const response = await fetch(`/api/mangadex-retrieve?title=${title}`);
+      const response = await fetch(`/api/mangadex-retrieve?title=${title}&mal_id=${mal_id}`);
 
       // update this in the future, as cannot exactly be considered an error, just that a result was not found
       // better way to handle this than big red error text on the screen
@@ -57,13 +64,15 @@ export default function MangaPage() {
         throw new Error('Failed to fetch manga from Mangadex');
       }
 
-      // if(response.status===404) {
-      //   throw new Error('No results found on mangadex')
-      // }
-
       const data = await response.json();
-      console.log('Mangadex data: ', data);
-      setMangadexUrl(data.pageUrl);
+
+      if (response.status === 404) {
+        setMangadexUrl('');
+        setError(data.error);
+      } else {
+        console.log('Mangadex data: ', data);
+        setMangadexUrl(data.pageUrl);
+      }
     } catch (error) {
       if(error instanceof Error) {
         setError(error.message);
@@ -168,31 +177,53 @@ export default function MangaPage() {
           Get Manga
         </motion.button>
       )}
-      <div className="flex flex-col gap-6 md:flex-row md:gap-12 items-start">
-        {mangadexUrl && (
-          <div className="flex flex-col">
-            <motion.button
-              onClick={() => window.open(mangadexUrl, '_blank')}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.80 }}
-              transition={{
-                type: 'spring',
-                stiffness: 500,
-                damping: 20,
-              }}
-              className="mt-6 px-6 py-2 bg-orange-600 text-white rounded hover:bg-orange-700 transition"
+      <AnimatePresence mode="wait">
+        <div className="flex flex-col gap-6 md:flex-row md:gap-12 items-start">
+          {mangadexUrl ? (
+            // If we have a valid MangaDex URL, show the button
+            <motion.div
+              key={`md-button-${mangadexUrl}`} // unique key
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              transition={{ duration: 0.3 }}
+              className="flex flex-col"
             >
-              Go to MangaDex
-            </motion.button>
-
-            {/* Disclaimer Text */}
-            {/* this needs to be reworked cause this looks super ugly */}
-            <p className="mt-2 text-sm text-gray-600 max-w-xs">
-              Note: Due to MangaDex's title seraching methods, this link may not always be accurate.
-            </p>
-          </div>
-        )}
-      </div>
+              <motion.button
+                onClick={() => window.open(mangadexUrl, '_blank')}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.8 }}
+                transition={{
+                  type: 'spring',
+                  stiffness: 500,
+                  damping: 20,
+                }}
+                className="mt-6 px-6 py-2 bg-orange-600 text-white rounded hover:bg-orange-700 transition"
+              >
+                Go to MangaDex
+              </motion.button>
+              <p className="mt-2 text-sm text-gray-600 max-w-xs">
+                Note: Due to MangaDex's title searching methods, this link may not always be accurate.
+              </p>
+            </motion.div>
+          ) : error ? (
+            // If no MangaDex URL and there's an error, show it here
+            <motion.div
+              key={`md-error-${error}`} // unique key
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              transition={{ duration: 0.3 }}
+              className="bg-red-100 border border-red-400 text-red-700 px-4 py-4 rounded max-w-xs mt-6"
+            >
+              <p>{error}</p>
+              <p className="mt-1 text-sm text-gray-600">
+                This manga could not be found on Mangadex, you can either search again or search manually for it.
+              </p>
+            </motion.div>
+          ) : null}
+        </div>
+      </AnimatePresence>
       <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-4 rounded max-w-xl mt-4" role="alert">
         <strong className="font-bold">Sensitive Content Warning: </strong>
         <span className="block sm:inline ml-1">

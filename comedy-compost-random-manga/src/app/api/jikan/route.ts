@@ -18,6 +18,8 @@ export async function GET() {
   // list of excluded genres as these are not suitable for a general audience
   const excludedGenres: number[] = [9, 49, 12]
 
+  const excludedTypes: string[] = ['light novel', 'novel']
+
   while (attempt < maxAttempts) {
     const randomNumber: number = getRandomInt(1, totalManga.pagination.items.total);
     console.log('random id selected: ', randomNumber);
@@ -38,12 +40,20 @@ export async function GET() {
 
       const hasExcludedGenres = mangaGenres.some((id: number) => excludedGenres.includes(id))
 
-      if (!hasExcludedGenres) {
+      const mangaType: string | undefined = json.data.type;
+
+      const hasExcludedType = mangaType ? excludedTypes.includes(mangaType.toLowerCase()) : false;
+
+      if (!hasExcludedGenres && !hasExcludedType) {
         console.log('Success on attempt: ', attempt + 1);
-        data = json;
+        data = {
+          ...json,
+          mal_id: randomNumber,
+        };
+
         break;
       } else {
-        console.log('Skipping manga due to genre that is innapropirate for general audiences');
+        console.log('Skipped due to innapropriate genre or invalid type')
         continue;
       }
     }

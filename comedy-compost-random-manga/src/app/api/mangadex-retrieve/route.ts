@@ -1,22 +1,25 @@
-// all credit goes to mangadex team and their open api for this specific section
-// all information and documentation can be found here https://api.mangadex.org/docs/
+// /api/mangadex-retrieve.ts
 import { NextRequest, NextResponse } from 'next/server';
-
-function normalize(str: string): string {
-  return str
-    .toLowerCase()
-    .replace(/[^a-z0-9]/gi, ''); // remove spaces/punctuation
-}
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
+  const malId = searchParams.get('mal_id'); // MAL ID from frontend
   const mangaTitle = searchParams.get('title') || '';
+
+  if (!malId) {
+    return NextResponse.json(
+      { error: 'Missing mal_id parameter' },
+      { status: 400 }
+    );
+  }
 
   const baseUrl = 'https://api.mangadex.org';
 
   try {
-    // fetch top 5 results instead of only 1
-    const url = `${baseUrl}/manga?title=${encodeURIComponent(mangaTitle)}&limit=5`;
+    // Fetch top 5 results for the given title
+    const url = `${baseUrl}/manga?title=${encodeURIComponent(
+      mangaTitle
+    )}&limit=5`;
     const response = await fetch(url);
 
     if (!response.ok) {
@@ -30,44 +33,47 @@ export async function GET(request: NextRequest) {
 
     if (!data.data || data.data.length === 0) {
       return NextResponse.json(
-        { error: 'No results found on MangaDex' },
+        {
+          error: `No results found on MangaDex for "${mangaTitle}"`,
+          title: mangaTitle,
+          mal_id: malId,
+        },
         { status: 404 }
       );
     }
 
-    // normalize query for comparison
-    const queryNorm = normalize(mangaTitle);
-
-    // try to find the best match
-    let bestMatch = data.data[0]; // fallback if nothing exact
+    // Try to find exact MAL ID match
+    let exactMatch = null;
     for (const manga of data.data) {
-      const titles: string[] = [];
-
-      // add main title
-      if (manga.attributes?.title) {
-        titles.push(...Object.values(manga.attributes.title) as string[]);
-      }
-
-      // add alt titles
-      if (Array.isArray(manga.attributes?.altTitles)) {
-        for (const alt of manga.attributes.altTitles) {
-          titles.push(...Object.values(alt) as string[]);
-        }
-      }
-
-      // see if any title matches normalized query
-      for (const t of titles) {
-        if (normalize(t) === queryNorm) {
-          bestMatch = manga;
-          break;
-        }
+      if (manga.attributes.links?.mal === malId) {
+        exactMatch = manga;
+        break;
       }
     }
 
-    const id = bestMatch.id;
-    const pageUrl = `https://mangadex.org/title/${id}`;
+    if (!exactMatch) {
+      // No exact match found
+      return NextResponse.json(
+        {
+          error: `This manga could not be found on MangaDex. You may need to search manually to find it.`,
+          title: mangaTitle,
+          mal_id: malId,
+        },
+        { status: 404 }
+      );
+    }
 
-    return NextResponse.json({ ...bestMatch, pageUrl });
+    // Return only necessary fields
+    const pageUrl = `https://mangadex.org/title/${exactMatch.id}`;
+
+    return NextResponse.json({
+      id: exactMatch.id,
+      title: exactMatch.attributes.title,
+      altTitles: exactMatch.attributes.altTitles,
+      malId: exactMatch.attributes.links?.mal || null,
+      pageUrl,
+      matchType: 'exact',
+    });
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
@@ -79,3 +85,4 @@ export async function GET(request: NextRequest) {
     }
   }
 }
+
