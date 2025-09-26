@@ -192,21 +192,6 @@ export default function MangaPage() {
             </p>
           </div>
         )}
-        <div className="flex flex-col">
-          <motion.button
-            onClick={() => window.open('https://batotwo.docs.apiary.io/#introduction/allowed-https-requests:', '_blank')}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.80 }}
-            transition={{
-              type: 'spring',
-              stiffness: 500,
-              damping: 20,
-            }}
-            className="mt-6 px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
-          >
-            Go to Batoto
-          </motion.button>
-        </div>
       </div>
       <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-4 rounded max-w-xl mt-4" role="alert">
         <strong className="font-bold">Sensitive Content Warning: </strong>
