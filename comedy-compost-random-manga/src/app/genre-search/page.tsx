@@ -27,6 +27,7 @@ export default function MangaPage() {
   const [options, setOptions] = useState<SelectOption[]>([]);
   const [selections, setSelections] = useState<number[]>([])
   const [selectionsExclude, setSelectionsExclude] = useState<number[]>([]);
+  const [mangadexUrl, setMangadexUrl] = useState('');
 
   const handleSelectionChange = (genres: number[]) => {
     setSelections(genres);
@@ -61,6 +62,9 @@ export default function MangaPage() {
 
   const fetchMangaWithGenres = async () => {
     setLoading(true);
+    setError('');
+    setMangadexUrl('');
+
     const genreString = selections.join(',');
     const genreExcludeString = selectionsExclude.join(',');
     try{
@@ -75,9 +79,11 @@ export default function MangaPage() {
       }
       
       const data = await response.json();
-      console.log('genre data: ', data);
+      // console.log('genre data: ', data);
+      // console.log('title: ', data.data.title);
+      // console.log('MAL ID: ', data.data.mal_id);
 
-      // setManga(data.data[randomInt]);
+      fetchMangadex(data.data.title, data.data.mal_id);
       setManga(data.data);
       setIsMangaFetched(true);
     } catch (error) {
@@ -91,6 +97,39 @@ export default function MangaPage() {
     }
   }
 
+  const fetchMangadex = async (title: string, mal_id: number) => {
+    try{
+      const response = await fetch(`/api/mangadex-retrieve?title=${title}&mal_id=${mal_id}`);
+
+      // update this in the future, as cannot exactly be considered an error, just that a result was not found
+      // better way to handle this than big red error text on the screen
+      if(response.status === 404) {
+        setMangadexUrl('');
+        throw new Error('No results found on mangadex');
+      }
+
+      if(!response.ok) {
+        throw new Error('Failed to fetch manga from Mangadex');
+      }
+
+      const data = await response.json();
+
+      if (response.status === 404) {
+        setMangadexUrl('');
+        setError(data.error);
+      } else {
+        console.log('Mangadex data: ', data);
+        setMangadexUrl(data.pageUrl);
+      }
+    } catch (error) {
+      if(error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unexpected error occurred');
+      }
+    }
+  }
+
   
 
  
@@ -101,11 +140,11 @@ export default function MangaPage() {
       <p className="text-gray-600 mb-4">Select genres to include or exclude, then click &quot;Fetch Manga&quot;.</p>
       <div className="flex flex-col gap-6 md:flex-row md:gap-12 items-start">
         <div className="flex flex-col">
-          <h2>Include Genres</h2>
+          <h2 className="font-bold">Include Genres</h2>
           <GenreDropdown onChange={handleSelectionChange} options={options.filter(opt => !selectionsExclude.includes(opt.value))}/>
         </div>
         <div className="flex flex-col">
-          <h2>Exclude Genres</h2>
+          <h2 className="font-bold">Exclude Genres</h2>
           <GenreDropdown onChange={handleSelectionChangeExclude} options={options.filter(opt => !selections.includes(opt.value))}/>
         </div>
       </div>
@@ -198,6 +237,54 @@ export default function MangaPage() {
           Get Manga
         </motion.button>
       )}
+
+      <AnimatePresence mode="wait">
+        <div className="flex flex-col gap-6 md:flex-row md:gap-12 items-start">
+          {mangadexUrl ? (
+            // If we have a valid MangaDex URL, show the button
+            <motion.div
+              key={`md-button-${mangadexUrl}`} // unique key
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              transition={{ duration: 0.3 }}
+              className="flex flex-col"
+            >
+              <motion.button
+                onClick={() => window.open(mangadexUrl, '_blank')}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.8 }}
+                transition={{
+                  type: 'spring',
+                  stiffness: 500,
+                  damping: 20,
+                }}
+                className="mt-6 px-6 py-2 bg-orange-600 text-white rounded hover:bg-orange-700 transition"
+              >
+                Go to MangaDex
+              </motion.button>
+              <p className="mt-2 text-sm text-gray-600 max-w-xs">
+                Note: Due to MangaDex&apos;s title searching methods, this link may not always be accurate.
+              </p>
+            </motion.div>
+          ) : error ? (
+            // If no MangaDex URL and there's an error, show it here
+            <motion.div
+              key={`md-error-${error}`} // unique key
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              transition={{ duration: 0.3 }}
+              className="bg-red-100 border border-red-400 text-red-700 px-4 py-4 rounded max-w-xs mt-6"
+            >
+              <p>{error}</p>
+              <p className="mt-1 text-sm text-gray-600">
+                This manga could not be found on Mangadex, you can either search again or search manually for it.
+              </p>
+            </motion.div>
+          ) : null}
+        </div>
+      </AnimatePresence>
 
       <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-4 rounded max-w-xl mt-4" role="alert">
         <strong className="font-bold">Adult Content Warning: </strong>

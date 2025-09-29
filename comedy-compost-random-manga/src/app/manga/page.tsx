@@ -17,11 +17,10 @@ export default function MangaPage() {
 
   const fetchManga = async () => {
     // clear old results
-    // setManga(null);
     setMangadexUrl('');
-    setError('');
     setLoading(true);
     setError('');
+
     try{
       const response = await fetch ('/api/jikan');
 
@@ -203,7 +202,7 @@ export default function MangaPage() {
                 Go to MangaDex
               </motion.button>
               <p className="mt-2 text-sm text-gray-600 max-w-xs">
-                Note: Due to MangaDex's title searching methods, this link may not always be accurate.
+                Note: Due to MangaDex&apos;s title searching methods, this link may not always be accurate.
               </p>
             </motion.div>
           ) : error ? (
