@@ -87,7 +87,7 @@ export default function MangaPage() {
       <Header />
       {/* <GenreDropdown onChange={handleSelectionChange}/> */}
        <h1 className="text-3xl font-bold mb-4">Random Manga Finder</h1>
-      {error && <p className="text-red-500">{error}</p>}
+      {/* {error && <p className="text-red-500">{error}</p>} */}
       
       <AnimatePresence mode="wait">
         {loading && (
@@ -223,7 +223,7 @@ export default function MangaPage() {
           ) : null}
         </div>
       </AnimatePresence>
-      <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-4 rounded max-w-xl mt-4" role="alert">
+      <div className="bg-red-100 border border-red-400 text-center text-red-700 px-4 py-4 rounded max-w-xl mt-4" role="alert">
         <strong className="font-bold">Sensitive Content Warning: </strong>
         <span className="block sm:inline ml-1">
           There are blocks in place to filter out manga that are specifically pornographic in nature, as this is not the intended use for this webapp. However, if these filters were made too strict, it would remove the possibility of finding some great stories, such as Berserk by Kentaro Miura.
