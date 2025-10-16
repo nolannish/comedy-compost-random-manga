@@ -2,13 +2,13 @@ import Header from "@/components/Header";
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen flex flex-col justify-between bg-gray-50 text-gray-800">
+    <main className="min-h-screen flex flex-col justify-between bg-[#2a2a2a] text-gray-100">
       <Header />
       <section className="flex-grow flex flex-col items-center text-center px-6 py-12 space-y-12">
         <h1 className="text-4xl md:text-5xl font-bold mb-6">About Us</h1>  
 
         {/* Intro Section */}
-        <div className="max-w-3xl bg-white shadow rounded-2xl p-6 text-left">
+        <div className="max-w-3xl bg-[#121212] shadow rounded-2xl p-6 text-left">
           <h2 className="text-2xl font-semibold mb-4">Who We Are</h2>
 
           <p className="text-gray-600 mb-4">
@@ -46,7 +46,7 @@ export default function AboutPage() {
 
 
         {/* Acknowledgements */}
-        <div className="max-w-3xl bg-white shadow rounded-2xl p-6 text-left">
+        <div className="max-w-3xl bg-[#121212] shadow rounded-2xl p-6 text-left">
           <h2 className="text-2xl font-semibold mb-4">External Sources</h2>
 
           <p className="text-gray-600 mb-4">

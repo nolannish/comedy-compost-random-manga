@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Header from '@/components/Header';
+import AdultContentWarning from '@/components/AdultContentWarning';
 // import GenreDropdown from '@/components/GenreDropdown';
 import dynamic from 'next/dynamic';
 import { GetGenreOptions } from '../data/genre-options';
@@ -134,21 +135,21 @@ export default function MangaPage() {
 
  
   return (
-    <main className="min-h-screen flex flex-col items-center bg-gray-50 text-gray-800">
+    <main className="min-h-screen flex flex-col items-center bg-[#2a2a2a] text-gray-100">
       <Header />
       <h1 className="text-3xl font-bold mb-4">Random Manga Finder</h1>
-      <p className="text-gray-600 mb-4">Select genres to include or exclude, then click &quot;Fetch Manga&quot;.</p>
-      <div className="flex flex-col gap-6 md:flex-row md:gap-12 items-start">
-        <div className="flex flex-col">
+      <p className="text-gray-400 mb-4">Select genres to include or exclude, then click &quot;Fetch Manga&quot;.</p>
+      <div className="flex flex-col gap-6 py-4 md:flex-row md:gap-12 items-start">
+        <div className="flex flex-col text-gray-400">
           <h2 className="font-bold">Include Genres</h2>
           <GenreDropdown onChange={handleSelectionChange} options={options.filter(opt => !selectionsExclude.includes(opt.value))}/>
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col text-gray-400 ">
           <h2 className="font-bold">Exclude Genres</h2>
           <GenreDropdown onChange={handleSelectionChangeExclude} options={options.filter(opt => !selections.includes(opt.value))}/>
         </div>
       </div>
-      {error && <p className="text-red-500">{error}</p>}
+      {/* {error && <p className="text-red-500">{error}</p>} */}
 
       <AnimatePresence mode="wait">
         {loading && (
@@ -162,12 +163,12 @@ export default function MangaPage() {
           >
             <div className="flex flex-row">
               {/* Manga Image Loader */}
-              <div className="bg-white shadow-md rounded py-3 p-5 w-full max-w-md flex flex-col items-center justify-center">
+              <div className="bg-[#121212] shadow-md rounded py-3 p-5 w-full max-w-md flex flex-col items-center justify-center">
                 <PulseLoader color="#000000" size={15} />
               </div>
 
               {/* Manga Synopsis Loader */}
-              <div className="bg-white shadow-md rounded py-3 p-5 w-full max-w-md flex items-center justify-center">
+              <div className="bg-[#121212] shadow-md rounded py-3 p-5 w-full max-w-md flex items-center justify-center">
                 <p className="text-gray-500 italic">Fetching new manga...</p>
               </div>
             </div>
@@ -186,7 +187,7 @@ export default function MangaPage() {
             className="flex flex-row"
           >
             <div className="flex flex-row">
-              <div className="bg-white shadow-md rounded p-6 w-full max-w-md">
+              <div className="bg-[#121212] shadow-md rounded p-6 w-full max-w-md">
                 <h2 className="text-2xl font-semibold mb-2">{manga.title}</h2>
                 {manga.images?.jpg?.image_url && (
                   <Image
@@ -198,7 +199,7 @@ export default function MangaPage() {
                   />
                 )}
               </div>
-              <div className="bg-white shadow-md rounded p-5 w-full max-w-md">
+              <div className="bg-[#121212] shadow-md rounded p-5 w-full max-w-md">
                 <p>{manga.synopsis || 'No synopsis available.'}</p>
               </div>
             </div>
@@ -286,12 +287,7 @@ export default function MangaPage() {
         </div>
       </AnimatePresence>
 
-      <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-4 rounded max-w-xl mt-4" role="alert">
-        <strong className="font-bold">Adult Content Warning: </strong>
-        <span className="block sm:inline ml-1">
-          Please be aware that some manga retrieved may contain adult content. Strong user discretion is advised.
-        </span>
-      </div>
+      <AdultContentWarning />
       {/* <button
         onClick={fetchMangaWithGenres}
         className="mt-6 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"

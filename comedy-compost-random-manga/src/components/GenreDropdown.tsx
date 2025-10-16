@@ -41,6 +41,23 @@ export default function GenreDropdown({ onChange, options }: {
           zIndex: 9999, // optional, ensures menu stays on top if needed
         }),
       }}
+      theme={(theme) => ({
+        ...theme,
+        colors: {
+          ...theme.colors,
+          primary: '#3b82f6',        // main accent color (blue-500)
+          primary25: '#2563eb',      // option hover color
+          primary50: '#60a5fa',      // lighter hover (optional)
+          neutral0: '#1e293b',       // background of control (slate-800)
+          neutral5: '#334155',       // light background variant
+          neutral10: '#3b82f6',      // multi-value background
+          neutral20: '#334155',      // border color (normal)
+          neutral30: '#3b82f6',      // border color (focused)
+          neutral40: '#9ca3af',      // placeholder text
+          neutral60: '#cbd5e1',      // icon color
+          neutral80: '#f8fafc',      // text color
+        },
+      })}
     />
   )
 }

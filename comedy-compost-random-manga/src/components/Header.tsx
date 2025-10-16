@@ -15,7 +15,7 @@ export default function Header() {
   ]
 
   return (
-    <header className="bg-gradient-to-r from-[#384d48] to-[#334155] shadow-md border-b border-white/10 w-full">
+    <header className="bg-gradient-to-r from-[#384d48] to-[#232e3d] shadow-md border-b border-black/90 w-full">
       <div className="w-full mx-auto px-8 py-4 flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Link href='/'>
@@ -28,9 +28,8 @@ export default function Header() {
             key={item.href}
             href={item.href}
             className={clsx(
-              'relative px-3 py-2 text-gray-300 hover:text-white transition-all duration-200',
-              'after:absolute after:bottom-0 after:left-1/2 after:h-[2px] after:w-0 after:bg-blue-400 after:transition-all after:duration-300 hover:after:left-0 hover:after:w-full after:opacity-0 hover:after:opacity-100',
-              pathname === item.href && 'text-white after:w-full after:!left-0 after:opacity-100'
+              'relative px-3 py-2 text-gray-300 hover:text-white hover:bg-blue-400 rounded-md transition-all duration-200',
+              pathname === item.href && 'bg-blue-400 text-white'
             )}
           >
             {item.name}
