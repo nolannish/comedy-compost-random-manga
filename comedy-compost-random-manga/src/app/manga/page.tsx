@@ -7,6 +7,11 @@ import type { Manga } from '@/types/index';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
 import { PulseLoader } from 'react-spinners';
+import type { Metadata } from 'next';
+
+// export const metadata: Metadata = {
+//   title: 'Random Manga Generator'
+// }
 
 export default function MangaPage() {
   const [manga, setManga] = useState<Manga | null>(null);

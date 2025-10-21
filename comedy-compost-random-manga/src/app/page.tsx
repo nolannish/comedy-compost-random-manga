@@ -5,7 +5,7 @@ import { motion } from 'motion/react';
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col justify-between bg-gray-50 text-gray-800">
+    <main className="min-h-screen flex flex-col justify-between bg-[#2a2a2a] text-gray-100">
       <Header />
 
       <section className="flex-grow flex flex-col items-center justify-center text-center px-4">
