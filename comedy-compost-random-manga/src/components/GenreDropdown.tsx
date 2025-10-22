@@ -35,6 +35,7 @@ export default function GenreDropdown({ onChange, options }: {
         control: (base) => ({
           ...base,
           minWidth: '300px', // or set width: '300px' for fixed
+          maxWidth: '400px', // options, limits max width
         }),
         menu: (base) => ({
           ...base,
