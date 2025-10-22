@@ -142,11 +142,25 @@ export default function GenreSearchPage() {
       <div className="flex flex-col gap-6 py-4 md:flex-row md:gap-12 items-start">
         <div className="flex flex-col text-gray-400">
           <h2 className="font-bold">Include Genres</h2>
-          <GenreDropdown onChange={handleSelectionChange} options={options.filter(opt => !selectionsExclude.includes(opt.value))}/>
+          <motion.div
+            key="include-dropdown"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+          >
+            <GenreDropdown onChange={handleSelectionChange} options={options.filter(opt => !selectionsExclude.includes(opt.value))}/>
+          </motion.div>
         </div>
         <div className="flex flex-col text-gray-400 ">
           <h2 className="font-bold">Exclude Genres</h2>
-          <GenreDropdown onChange={handleSelectionChangeExclude} options={options.filter(opt => !selections.includes(opt.value))}/>
+          <motion.div
+            key="exclude-dropdown"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+          >
+            <GenreDropdown onChange={handleSelectionChangeExclude} options={options.filter(opt => !selections.includes(opt.value))}/>
+          </motion.div>
         </div>
       </div>
       {/* {error && <p className="text-red-500">{error}</p>} */}
