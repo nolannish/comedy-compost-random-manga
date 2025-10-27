@@ -25,6 +25,8 @@ export default function GenreSearchPage() {
   const [isMangaFetched, setIsMangaFetched] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [errorDescription, setErrorDescription] = useState('');
+  const [cantBeFoundError, setCantBeFoundError] = useState(false);
   const [options, setOptions] = useState<SelectOption[]>([]);
   const [selections, setSelections] = useState<number[]>([])
   const [selectionsExclude, setSelectionsExclude] = useState<number[]>([]);
@@ -64,6 +66,8 @@ export default function GenreSearchPage() {
   const fetchMangaWithGenres = async () => {
     setLoading(true);
     setError('');
+    setErrorDescription('');
+    setCantBeFoundError(false);
     setMangadexUrl('');
 
     const genreString = selections.join(',');
@@ -75,6 +79,16 @@ export default function GenreSearchPage() {
 
       const response = await fetch(url);
 
+      // check if no manga found for given genres
+      if (response.status === 404) {
+        const errData = await response.json();
+        setError(errData.error || 'No manga found for the given combination of genres: ');
+        setErrorDescription('Broader genre selections yield better results. Please try adjusting the genres you selected and try again.');
+        setCantBeFoundError(true);
+        setLoading(false);
+        return;
+      }
+
       if (!response.ok) {
         throw new Error('failed to fetch manga with selected genres');
       }
@@ -83,7 +97,7 @@ export default function GenreSearchPage() {
       // console.log('genre data: ', data);
       // console.log('title: ', data.data.title);
       // console.log('MAL ID: ', data.data.mal_id);
-
+      
       fetchMangadex(data.data.title, data.data.mal_id);
       setManga(data.data);
       setIsMangaFetched(true);
@@ -104,20 +118,22 @@ export default function GenreSearchPage() {
 
       // update this in the future, as cannot exactly be considered an error, just that a result was not found
       // better way to handle this than big red error text on the screen
-      if(response.status === 404) {
-        setMangadexUrl('');
-        throw new Error('No results found on mangadex');
-      }
+      // if(response.status === 404) {
+      //   setMangadexUrl('');
+      //   setErrorDescription('This manga could not be found on Mangadex, you can either search again or search for it manually.');
+      //   throw new Error('No results found on Mangadex');
+      // }
 
-      if(!response.ok) {
-        throw new Error('Failed to fetch manga from Mangadex');
-      }
+      // if(!response.ok) {
+      //   throw new Error('Failed to fetch manga from Mangadex');
+      // }
 
       const data = await response.json();
 
       if (response.status === 404) {
         setMangadexUrl('');
         setError(data.error);
+        //  setErrorDescription('This manga could not be found on Mangadex, you can either search again or search for it manually.');
       } else {
         console.log('Mangadex data: ', data);
         setMangadexUrl(data.pageUrl);
@@ -191,7 +207,7 @@ export default function GenreSearchPage() {
       </AnimatePresence>
 
       <AnimatePresence mode="wait">
-        {!loading && manga && (
+        {!loading && manga && !cantBeFoundError &&(
           <motion.div
             key="manga"
             initial={{ opacity: 0 }}
@@ -290,12 +306,12 @@ export default function GenreSearchPage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 10 }}
               transition={{ duration: 0.3 }}
-              className="bg-red-100 border border-red-400 text-red-700 px-4 py-4 rounded max-w-xs mt-6"
+              className="bg-red-100 border border-red-400 text-red-700 text-center px-4 py-4 rounded max-w-xs mt-6"
             >
-              <p>{error}</p>
-              <p className="mt-1 text-sm text-gray-600">
-                This manga could not be found on Mangadex, you can either search again or search manually for it.
-              </p>
+              <strong className="font-bold">{error}</strong>
+              <span className="block sm:inline ml-1">
+                {errorDescription}
+              </span>
             </motion.div>
           ) : null}
         </div>

@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const malId = searchParams.get('mal_id'); // MAL ID from frontend
+  const malId = searchParams.get('mal_id'); 
   const mangaTitle = searchParams.get('title') || '';
 
   if (!malId) {
@@ -33,11 +33,7 @@ export async function GET(request: NextRequest) {
 
     if (!data.data || data.data.length === 0) {
       return NextResponse.json(
-        {
-          error: `No results found on MangaDex for "${mangaTitle}"`,
-          title: mangaTitle,
-          mal_id: malId,
-        },
+        { error: `No results found on MangaDex for "${mangaTitle}"` },
         { status: 404 }
       );
     }
@@ -54,11 +50,7 @@ export async function GET(request: NextRequest) {
     if (!exactMatch) {
       // No exact match found
       return NextResponse.json(
-        {
-          error: `This manga could not be found on MangaDex. You may need to search manually to find it.`,
-          title: mangaTitle,
-          mal_id: malId,
-        },
+        { error: `No results found on MangaDex for "${mangaTitle}"` },
         { status: 404 }
       );
     }

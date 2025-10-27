@@ -20,6 +20,15 @@ export async function GET(request: NextRequest) {
     }
     const firstPageData = await response.json();
     // console.log('firstPageData: ', firstPageData);
+
+    //if no manga found with given genres
+    if (!firstPageData.data || firstPageData.data.length === 0) {
+      return NextResponse.json( 
+        { error: 'No manga found for the given combination of genres.' },
+        { status: 404 } 
+      );
+    }
+
     const totalPages = firstPageData.pagination.last_visible_page;
 
     const randomPage = Math.floor(Math.random() * totalPages) + 1;
@@ -31,6 +40,13 @@ export async function GET(request: NextRequest) {
     const randomPageResponse = await fetch(randomPageUrl);
     const randomPageData = await randomPageResponse.json();
 
+    // second check if data exists
+    if (!randomPageData.data || randomPageData.data.length === 0) {
+      return NextResponse.json(
+        { error: 'No manga found for the given combination of genres' }, 
+        { status: 404 }
+      );
+    }
     const randomManga = randomPageData.data[
       Math.floor(Math.random() * randomPageData.data.length)
     ];
