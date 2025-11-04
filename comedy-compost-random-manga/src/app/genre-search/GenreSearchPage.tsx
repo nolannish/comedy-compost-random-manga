@@ -118,22 +118,20 @@ export default function GenreSearchPage() {
 
       // update this in the future, as cannot exactly be considered an error, just that a result was not found
       // better way to handle this than big red error text on the screen
-      // if(response.status === 404) {
-      //   setMangadexUrl('');
-      //   setErrorDescription('This manga could not be found on Mangadex, you can either search again or search for it manually.');
-      //   throw new Error('No results found on Mangadex');
-      // }
+      if(response.status === 404) {
+        setMangadexUrl('');
+        throw new Error('No results found on Mangadex');
+      }
 
-      // if(!response.ok) {
-      //   throw new Error('Failed to fetch manga from Mangadex');
-      // }
+      if(!response.ok) {
+        throw new Error('Failed to fetch manga from Mangadex');
+      }
 
       const data = await response.json();
 
       if (response.status === 404) {
         setMangadexUrl('');
         setError(data.error);
-        //  setErrorDescription('This manga could not be found on Mangadex, you can either search again or search for it manually.');
       } else {
         console.log('Mangadex data: ', data);
         setMangadexUrl(data.pageUrl);
@@ -308,10 +306,10 @@ export default function GenreSearchPage() {
               transition={{ duration: 0.3 }}
               className="bg-red-100 border border-red-400 text-red-700 text-center px-4 py-4 rounded max-w-xs mt-6"
             >
-              <strong className="font-bold">{error}</strong>
-              <span className="block sm:inline ml-1">
-                {errorDescription}
-              </span>
+              <p className="text-center">{error}</p>
+              <p className="mt-1 text-sm text-gray-600 text-center">
+                This manga could not be found on Mangadex, you can either search again or search manually for it.
+              </p>
             </motion.div>
           ) : null}
         </div>
