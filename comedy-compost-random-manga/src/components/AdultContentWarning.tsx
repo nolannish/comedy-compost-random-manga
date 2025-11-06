@@ -21,15 +21,15 @@ export default function AdultContentWarning() {
             transition={{ duration: 0.3 }}
           >
             <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.80 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.95 }}
               transition={{
                   type: 'spring',
                   stiffness: 500,
                   damping: 20,
               }}
               onClick={() => setVisible(true)}
-              className="mt-3 px-6 py-2 bg-red-500 text-white rounded hover:bg-red-700 transition"
+              className="mt-3 mb-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-700 transition"
             >
               Show Mature Content Warning
             </motion.button>
@@ -43,7 +43,7 @@ export default function AdultContentWarning() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="relative bg-red-100 border border-red-400 text-center text-red-700 px-4 py-4 rounded max-w-xl mt-4" role="alert"
+            className="mb-4 relative bg-red-100 border border-red-400 text-center text-red-700 px-4 py-4 rounded max-w-xl mt-2" role="alert"
           >
             <button
               onClick={() => setVisible(false)}
