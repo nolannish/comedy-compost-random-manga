@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Comedy Compost Random Manga Generator",
   description: "A website create by Nolan Nishikawa from Comedy Compost for a Youtube Video",
+  icons: {
+    icon: "/CCRMG.svg",
+  },
 };
 
 export default function RootLayout({
